@@ -1,8 +1,8 @@
 const http = require("http");
 
 const servers = [
-  { hostname: "host.docker.internal", port: 3000 }, // Server 1 we have to add a port which we will get after running a command in sever1 folder
-  { hostname: "host.docker.internal", port: 3004 }, // Server 2 we have to add a port which we will get after running a command in sever2 folder
+  { hostname: "192.168.39.157", port: 30081 }, // minikube ip + nodeport
+  { hostname: "192.168.39.157", port: 30080 }, // minikube ip + nodeport
 ];
 
 let currentServerIndex = 0;
