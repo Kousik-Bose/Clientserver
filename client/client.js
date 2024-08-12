@@ -1,4 +1,5 @@
 const http = require("http");
+const fs = require("fs");
 
 const servers = [
   { hostname: "192.168.39.157", port: 30081 }, // minikube ip + nodeport
@@ -6,6 +7,14 @@ const servers = [
 ];
 
 let currentServerIndex = 0;
+
+const logToFile = (message) => {
+  fs.appendFile('client.log', message + '\n', (err) => {
+    if (err) {
+      console.error(`Error writing to file: ${err.message}`);
+    }
+  });
+};
 
 const sendRequest = () => {
   const server = servers[currentServerIndex];
@@ -24,17 +33,20 @@ const sendRequest = () => {
     });
     res.on("end", () => {
       const timestamp = new Date().toISOString();
-      console.log(`[${timestamp}] Response from ${server.hostname}:${server.port} - ${data}`);
+      const logMessage = `[${timestamp}] Response from ${server.hostname}:${server.port} - ${data}`;
+      console.log(logMessage); 
+      logToFile(logMessage); 
     });
   });
 
   req.on("error", (e) => {
     const timestamp = new Date().toISOString();
-    console.error(`[${timestamp}] Problem with request: ${e.message}`);
+    const errorMessage = `[${timestamp}] Problem with request: ${e.message}`;
+    console.error(errorMessage); 
+    logToFile(errorMessage);    
   });
 
   req.end();
-
 
   currentServerIndex = (currentServerIndex + 1) % servers.length;
 };
